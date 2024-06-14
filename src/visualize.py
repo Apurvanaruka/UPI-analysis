@@ -22,3 +22,18 @@ def show_monthly_transaction(df):
     # Display the plot in Streamlit
     st.title('Monthly Amounts Plot')
     st.pyplot(fig)
+
+
+def show_type(df):
+    # st.bar_chart(data=df,x=df['datetime'].timestamp,y=df['amount'],color=df['type'])
+    # Plotting with Matplotlib
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.bar(df['datetime'], df['amount'])
+    ax.set_title('Value over Time')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Value')
+    plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+    plt.grid(axis='y')  # Add gridlines only for y-axis
+
+    # Display the plot in Streamlit
+    st.pyplot(fig)
