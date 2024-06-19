@@ -2,6 +2,7 @@ import pandas as pd
 import re
 import PyPDF2
 from datetime import datetime
+import streamlit as st
 
 
 def pdf_to_text(pdf_file):
@@ -44,6 +45,7 @@ def convert_to_dataframe(transactions):
     df = pd.DataFrame(transactions)
     return df
 
+@st.cache_data
 def preprocessor(df):
   df.columns = ['date','time','type','amount','name','transaction_id','utr_no','type_','account_no']
   df=df.drop('type_',axis=1)
