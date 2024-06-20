@@ -18,7 +18,6 @@ Q. how to get statement pdf from phonepe?
 3. No of transations per month
 4. Frequently transations Amount
 5. Frequently transations person
-6. Maximum Transation Amount 
 
 # Installations
 ### create virtual enviorment

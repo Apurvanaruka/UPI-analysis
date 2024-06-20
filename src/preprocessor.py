@@ -52,7 +52,7 @@ def preprocessor(df):
   df['time'] = pd.to_datetime(df['time'], format='%I:%M %p').dt.time
   df['date'] = pd.to_datetime(df['date'], format='%b %d, %Y')
   df.insert(0,'datetime',df.apply(lambda row: datetime.combine(row['date'].date(), row['time']), axis=1))
-  df['amount'] = df['amount'].str.replace('₹', '').str.replace(',', '').astype(int)
+  df['amount'] = df['amount'].str.replace('₹', '').str.replace(',', '').astype(float)
   df['utr_no'] = df['utr_no'].str.replace('UTR No. ', '')
   df['name'] = df['name'].str.replace(r'^(Paid to|Received from|Transfer to)\s', '', regex=True)
   df['transaction_id'] = df['transaction_id'].str.replace('Transaction ID ', '')
@@ -72,5 +72,5 @@ def preprocessor(df):
 # transactions = parse_text(text)
 # dataframe = convert_to_dataframe(transactions)
 # df=preprocessor(dataframe)
-#export_to_excel(df, "transactions.xlsx")
-#export_to_json(df, "transactions.json")
+# export_to_excel(df, "transactions.xlsx")
+# export_to_json(df, "transactions.json")

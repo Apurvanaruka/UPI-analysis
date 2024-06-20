@@ -9,3 +9,22 @@ def load_data():
             return pdf_file
     except:
         return print('error in pdf uploading')
+
+# Functions
+def total_amount(df):
+    return df['amount'].sum()
+
+def total_debit_amount(df):
+    return df[df['type'] == 'DEBIT']['amount'].sum()
+
+def total_credit_amount(df):
+    return df[df['type'] == 'CREDIT']['amount'].sum()
+
+def max_credit_amount(df):
+    return df[df['type'] == 'CREDIT']['amount'].max()
+
+def max_debit_amount(df):
+    return df[df['type'] == 'DEBIT']['amount'].max()
+
+def avg_transaction_amount(df):
+    return df['amount'].mean()
