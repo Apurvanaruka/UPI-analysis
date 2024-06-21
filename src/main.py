@@ -130,13 +130,13 @@ def amount_of_monthly_transactions():
         with col1:
             st.metric(label="Month", value=max_credit_month['month'])
         with col2:
-            st.metric(label="Credit Amount", value=f"${max_credit_month['credit']:,}")
+            st.metric(label="Credit Amount", value=f"₹{max_credit_month['credit']:,}")
         st.write("### 💸 Maximum Debit in a Month")
         col1, col2 = st.columns(2)
         with col1:
             st.metric(label="Month", value=max_debit_month['month'])
         with col2:
-            st.metric(label="Debit Amount", value=f"${max_debit_month['debit']:,}")
+            st.metric(label="Debit Amount", value=f"₹{max_debit_month['debit']:,}")
 
     with col21:
         st.write(monthly_transaction)
@@ -203,64 +203,108 @@ def no_of_monthly_transactions():
         monthly_transaction_len.drop_duplicates(ignore_index=True, inplace=True)
 
 
+    # Calculate the required statistics
+    max_transaction_month = monthly_transaction_len.loc[monthly_transaction_len['total_len'].idxmax()]
+    max_credit_month = monthly_transaction_len.loc[monthly_transaction_len['credit_len'].idxmax()]
+    max_debit_month = monthly_transaction_len.loc[monthly_transaction_len['debit_len'].idxmax()]
+
+    average_credit = monthly_transaction_len['credit_len'].mean()
+    average_debit = monthly_transaction_len['debit_len'].mean()
+    average_transaction = monthly_transaction_len['total_len'].mean()
+
     tab1, tab2 = st.tabs(['📊 Graph', '📄 Data'])
 
-    # Convert 'month' column to datetime objects for plotting
-    monthly_transaction_len['month'] = pd.to_datetime(
-        monthly_transaction_len['month'],
-        format='%B-%Y')
-    months_str = monthly_transaction_len['month'].dt.strftime('%B-%Y')
+    with tab1:
+        col1, col2 = st.columns(2)
+        with col2:
+            # Convert 'month' column to datetime objects for plotting
+            monthly_transaction_len['month'] = pd.to_datetime(
+                monthly_transaction_len['month'],
+                format='%B-%Y')
+            months_str = monthly_transaction_len['month'].dt.strftime('%B-%Y')
 
-    # Create the figure
-    fig = go.Figure()
+            # Create the figure
+            fig = go.Figure()
 
-    # Add debit transactions
-    fig.add_trace(go.Bar(
-        x=months_str,
-        y=monthly_transaction_len['debit_len'],
-        name='Debit',
-        marker_color='red',
-        offsetgroup=0,
-    ))
+            # Add debit transactions
+            fig.add_trace(go.Bar(
+                x=months_str,
+                y=monthly_transaction_len['debit_len'],
+                name='Debit',
+                marker_color='red',
+                offsetgroup=0,
+            ))
 
-    # Add total transactions
-    fig.add_trace(go.Bar(
-        x=months_str,
-        y=monthly_transaction_len['total_len'],
-        name='Total',
-        marker_color='skyblue',
-        offsetgroup=1
-    ))
+            # Add total transactions
+            fig.add_trace(go.Bar(
+                x=months_str,
+                y=monthly_transaction_len['total_len'],
+                name='Total',
+                marker_color='skyblue',
+                offsetgroup=1
+            ))
 
-    # Add credit transactions
-    fig.add_trace(go.Bar(
-        x=months_str,
-        y=monthly_transaction_len['credit_len'],
-        name='Credit',
-        marker_color='green',
-        offsetgroup=2
-    ))
+            # Add credit transactions
+            fig.add_trace(go.Bar(
+                x=months_str,
+                y=monthly_transaction_len['credit_len'],
+                name='Credit',
+                marker_color='green',
+                offsetgroup=2
+            ))
 
-    # Update the layout
-    fig.update_layout(
-        title='Number of Transactions Over Time',
-        xaxis_title='Month',
-        yaxis_title='Number of Transactions',
-        barmode='group',
-        bargap=0.15,
-        bargroupgap=0.1,
-        xaxis_tickangle=-45,
-        legend_title='Transaction Type',
-        width=1000,  # Increase the width of the plot
-        height=500  # Increase the height of the plot
-    )
+            # Update the layout
+            fig.update_layout(
+                title='Number of Transactions Over Time',
+                xaxis_title='Month',
+                yaxis_title='Number of Transactions',
+                barmode='group',
+                bargap=0.15,
+                bargroupgap=0.1,
+                xaxis_tickangle=-45,
+                legend_title='Transaction Type',
+                width=1000,  # Increase the width of the plot
+                height=500  # Increase the height of the plot
+            )
 
-    # Display the plot in Streamlit
-    tab1.plotly_chart(fig)
-    tab2.write(monthly_transaction_len)
+            # Display the plot in Streamlit
+
+            st.plotly_chart(fig)
+
+        with col1:
+            st.write("### 📅 Maximum No. of Transactions in Month")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric(label="Month", value=max_transaction_month['month'])
+            with col2:
+                st.metric(label="Total Transactions", value=f"{max_transaction_month['total_len']:,}")
+            st.write("### 💰 Maximum Credit Transactions in a Month")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric(label="Month", value=max_credit_month['month'])
+            with col2:
+                st.metric(label="Credit Transactions", value=f"{max_credit_month['credit_len']:,}")
+            st.write("### 💸 Maximum Debit Transaction in a Month")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric(label="Month", value=max_debit_month['month'])
+            with col2:
+                st.metric(label="Debit Transactions", value=f"{max_debit_month['debit_len']:,}")
+
+    with tab2:
+        col1, col2 = st.columns(2)
+        with col2:
+            st.write(monthly_transaction_len)
+
+        with col1:
+            st.write("### 📉 Average Statistics in Month")
+            st.metric(label="Average Credit Transactions", value=f"{int(average_credit)}")
+            st.metric(label="Average Debit Transactions", value=f"{int(average_debit)}")
+            st.metric(label="Average Total Transactions", value=f"{int(average_transaction)}")
+
 
 # overall_statistics()
-# amount_of_monthly_transactions()
+amount_of_monthly_transactions()
 no_of_monthly_transactions()
 # frequently_transations_amount()
 # frequently_transations_person()
