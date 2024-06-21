@@ -5,35 +5,38 @@ import plotly.graph_objects as go
 
 
 
+st.set_page_config(layout="wide")
+
 st.title('UPI Transactions Analysis 📈')
+
 pdf_file=load_data()
 text = pdf_to_text(pdf_file)
 transactions = parse_text(text)
 dataframe = convert_to_dataframe(transactions)
 df=preprocessor(dataframe)
 
-with st.expander('DataFrame'):
-    st.write(df)
 
-st.write('### Overall Statistics')
-col1, col2 = st.columns(2)
+def overall_statistics():
+    st.write('### Overall Statistics')
+    col1, col2 = st.columns(2)
 
-with col1:
-    st.metric(label="Total Amount", value=f"₹{total_amount(df):,.2f}")
-    st.metric(label="Total Debit Amount", value=f"₹{total_debit_amount(df):,.2f}")
-    st.metric(label="Total Credit Amount", value=f"₹{total_credit_amount(df):,.2f}")
+    with col1:
+        st.metric(label="Total Amount", value=f"₹{total_amount(df):,.2f}")
+        st.metric(label="Total Debit Amount", value=f"₹{total_debit_amount(df):,.2f}")
+        st.metric(label="Total Credit Amount", value=f"₹{total_credit_amount(df):,.2f}")
 
-with col2:
-    st.metric(label="Maximum Credit Amount", value=f"₹{max_credit_amount(df):,.2f}")
-    st.metric(label="Maximum Debit Amount", value=f"₹{max_debit_amount(df):,.2f}")
-    st.metric(label="Average Transaction Amount", value=f"₹{avg_transaction_amount(df):,.2f}")
+    with col2:
+        st.metric(label="Maximum Credit Amount", value=f"₹{max_credit_amount(df):,.2f}")
+        st.metric(label="Maximum Debit Amount", value=f"₹{max_debit_amount(df):,.2f}")
+        st.metric(label="Average Transaction Amount", value=f"₹{avg_transaction_amount(df):,.2f}")
 
-st.write('### Detailed Transactions Data')
-st.dataframe(df)
+    with st.expander('### Detailed Transactions Data'):
+        st.dataframe(df)
 
 
 def amount_of_monthly_transactions():
     """Amount every Month show in a bar chart."""
+
     monthly_transaction = pd.DataFrame(columns=['month', 'credit', 'debit', 'total'])
     for date in df['datetime']:
         month_year = date.strftime('%B-%Y')
@@ -50,10 +53,19 @@ def amount_of_monthly_transactions():
         }, ignore_index=True)
         monthly_transaction.drop_duplicates(ignore_index=True, inplace=True)
 
-    # Display monthly_transaction DataFrame in Streamlit
+    # Calculate the required statistics
+    max_transaction_month = monthly_transaction.loc[monthly_transaction['total'].idxmax()]
+    max_credit_month = monthly_transaction.loc[monthly_transaction['credit'].idxmax()]
+    max_debit_month = monthly_transaction.loc[monthly_transaction['debit'].idxmax()]
+
+    average_credit = monthly_transaction['credit'].mean()
+    average_debit = monthly_transaction['debit'].mean()
+    average_transaction = monthly_transaction['total'].mean()
+
 
     tab1, tab2 = st.tabs(['📊 Graph', '📄 Data'])
-
+    col11, col12 = tab1.columns(2)
+    col21, col22 = tab2.columns(2)
     # Convert 'month' column to datetime objects for plotting
     monthly_transaction['month'] = pd.to_datetime(monthly_transaction['month'], format='%B-%Y')
     months_str = monthly_transaction['month'].dt.strftime('%B-%Y')
@@ -103,8 +115,37 @@ def amount_of_monthly_transactions():
     )
 
     # Display the plot in Streamlit
-    tab1.plotly_chart(fig)
-    tab2.write(monthly_transaction)
+    col11.plotly_chart(fig)
+
+    # Start building the Streamlit app
+    with col12:
+        st.write("### 📅 Maximum Transactions Month")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric(label="Month", value=max_transaction_month['month'])
+        with col2:
+            st.metric(label="Total Amount", value=f"₹{max_transaction_month['total']:,}")
+        st.write("### 💰 Maximum Credit in a Month")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric(label="Month", value=max_credit_month['month'])
+        with col2:
+            st.metric(label="Credit Amount", value=f"${max_credit_month['credit']:,}")
+        st.write("### 💸 Maximum Debit in a Month")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric(label="Month", value=max_debit_month['month'])
+        with col2:
+            st.metric(label="Debit Amount", value=f"${max_debit_month['debit']:,}")
+
+    with col21:
+        st.write(monthly_transaction)
+
+    with col22:
+        st.write("### 📉 Average Statistics")
+        st.metric(label="Average Credit", value=f"₹{average_credit:,.2f}")
+        st.metric(label="Average Debit", value=f"₹{average_debit:,.2f}")
+        st.metric(label="Average Total Transactionst", value=f"₹{average_transaction:,.2f}")
 
 
 def frequently_transations_amount():
@@ -160,6 +201,7 @@ def no_of_monthly_transactions():
             'total_len': total_len
         }, ignore_index=True)
         monthly_transaction_len.drop_duplicates(ignore_index=True, inplace=True)
+
 
     tab1, tab2 = st.tabs(['📊 Graph', '📄 Data'])
 
@@ -217,8 +259,8 @@ def no_of_monthly_transactions():
     tab1.plotly_chart(fig)
     tab2.write(monthly_transaction_len)
 
-
-amount_of_monthly_transactions()
+# overall_statistics()
+# amount_of_monthly_transactions()
 no_of_monthly_transactions()
-frequently_transations_amount()
-frequently_transations_person()
+# frequently_transations_amount()
+# frequently_transations_person()
