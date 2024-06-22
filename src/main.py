@@ -36,6 +36,7 @@ def overall_statistics():
 
 def amount_of_monthly_transactions():
     """Amount every Month show in a bar chart."""
+    st.write('### Amount of Monthly Transactions')
 
     monthly_transaction = pd.DataFrame(columns=['month', 'credit', 'debit', 'total'])
     for date in df['datetime']:
@@ -149,6 +150,7 @@ def amount_of_monthly_transactions():
 
 
 def frequently_transations_amount():
+    st.write('### Transations Frequency Amount')
     amount_set = set(df['amount'].tolist())
     amount_list = []
     freq_list = []
@@ -159,34 +161,78 @@ def frequently_transations_amount():
         'amount': amount_list,
         'frequency': freq_list
     }).sort_values(by='frequency', ascending=False).reset_index(drop=True)
+
+    mostly_transaction_frequncy = amount_count[:5]
+
     tab1, tab2 = st.tabs(['📊 Graph', '📄 Data'])
-    # fig, ax = plt.subplots(figsize=(12, 8))
-    # ax.bar(x=amount_count['amount'],height=amount_count['frequency'])
-    # tab1.pyplot(fig)
-    tab1.bar_chart(amount_count[:20], x='amount', y='frequency')
-    tab2.write(amount_count)
+    with tab1:
+        col1, col2 = st.columns(2)
+        with col1:
+            st.bar_chart(amount_count[:20], x='amount', y='frequency')
+        with col2:
+            st.write("### :sparkles: Top 5 Transactions Amount")
+            st.table(mostly_transaction_frequncy)
+    with tab2:
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write("## 📋 Data table")
+            st.write(amount_count)
+        with col2:
+            # Select top 5 categories
+            top_10 = amount_count.head(10)
+
+            # Sum the rest of the categories
+            others = pd.DataFrame({
+                'amount': ['Other'],
+                'frequency': [amount_count['frequency'].iloc[10:].sum()]
+            })
+
+            # Combine top 5 and 'Other'
+            final_data = pd.concat([top_10, others])
+
+            # Create a pie chart using Plotly's graph_objects
+            fig = go.Figure(data=[go.Pie(labels=final_data['amount'], values=final_data['frequency'],textinfo='label+percent')])
+            fig.update_layout(title_text='💥 Pie Chart')
+
+            # Display the pie chart
+            st.plotly_chart(fig)
 
 
 def frequently_transations_person():
-    amount_set = set(df['name'].tolist())
-    amount_list = []
+    st.write('### Transations Frequency Person')
+    name_set = set(df['name'].tolist())
+    name_list = []
     freq_list = []
-    for amount in amount_set:
-        amount_list.append(amount)
-        freq_list.append(df['name'].tolist().count(amount))
-    amount_count = pd.DataFrame({'name': amount_list,
-                                 'frequency': freq_list}).sort_values(by='frequency',
+    total_amount_list = []
+    for name in name_set:
+        name_list.append(name)
+        freq_list.append(df['name'].tolist().count(name))
+        total_amount_list.append(sum(df[df['name'] == name]['amount']))
+
+    amount_count = pd.DataFrame({'name': name_list,
+                                 'frequency': freq_list,
+                                 'total_amount' : total_amount_list
+                                 }).sort_values(by='frequency',
                                   ascending=False).reset_index(drop=True)
     tab1, tab2 = st.tabs(['📊 Graph', '📄 Data'])
-    # fig, ax = plt.subplots(figsize=(12, 8))
-    # ax.bar(x=amount_count['amount'],height=amount_count['frequency'])
-    # tab1.pyplot(fig)
-    tab1.bar_chart(amount_count[:20], x='name', y='frequency')
-    tab2.write(amount_count)
-
-
+    with tab1:
+        col1, col2 = st.columns(2)
+        with col1:
+            st.bar_chart(amount_count[:20], x='name', y='frequency')
+        with col2:
+            st.write('### :sparkles: Top 5 Transactions Frequency')
+            st.table(amount_count[:5])
+    with tab2:
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write('### 📄Data Table')
+            st.write(amount_count)
+        with col2:
+            st.write('### 🚀 Maximum Amount Transaction')
+            st.write(amount_count.sort_values(by='total_amount',ascending=False)[:5])
 def no_of_monthly_transactions():
     """Show number of transactions per month in bar chart."""
+    st.write('### No of monthly Transactions')
 
     monthly_transaction_len = pd.DataFrame(columns=['month', 'credit_len', 'debit_len', 'total_len'])
     for date in df['datetime']:
@@ -216,7 +262,7 @@ def no_of_monthly_transactions():
 
     with tab1:
         col1, col2 = st.columns(2)
-        with col2:
+        with col1:
             # Convert 'month' column to datetime objects for plotting
             monthly_transaction_len['month'] = pd.to_datetime(
                 monthly_transaction_len['month'],
@@ -271,7 +317,7 @@ def no_of_monthly_transactions():
 
             st.plotly_chart(fig)
 
-        with col1:
+        with col2:
             st.write("### 📅 Maximum No. of Transactions in Month")
             col1, col2 = st.columns(2)
             with col1:
@@ -293,18 +339,18 @@ def no_of_monthly_transactions():
 
     with tab2:
         col1, col2 = st.columns(2)
-        with col2:
+        with col1:
             st.write(monthly_transaction_len)
 
-        with col1:
+        with col2:
             st.write("### 📉 Average Statistics in Month")
             st.metric(label="Average Credit Transactions", value=f"{int(average_credit)}")
             st.metric(label="Average Debit Transactions", value=f"{int(average_debit)}")
             st.metric(label="Average Total Transactions", value=f"{int(average_transaction)}")
 
 
-# overall_statistics()
+overall_statistics()
 amount_of_monthly_transactions()
 no_of_monthly_transactions()
-# frequently_transations_amount()
-# frequently_transations_person()
+frequently_transations_amount()
+frequently_transations_person()
