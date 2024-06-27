@@ -1,6 +1,5 @@
 import streamlit as st
 from preprocessor import *
-from utils import *
 import plotly.graph_objects as go
 
 
@@ -9,11 +8,34 @@ st.set_page_config(layout="wide")
 
 st.title('UPI Transactions Analysis 📈')
 
-pdf_file=load_data()
-text = pdf_to_text(pdf_file)
-transactions = parse_text(text)
-dataframe = convert_to_dataframe(transactions)
-df=preprocessor(dataframe)
+
+
+def load_data():
+    try:
+        with st.expander('Upload Phonepe Statement pdf.'):
+            pdf_file = st.file_uploader('Upload pdf file',['pdf'])
+            return pdf_file
+    except:
+        return print('Error in pdf uploading')
+
+# Functions
+def total_amount(df):
+    return df['amount'].sum()
+
+def total_debit_amount(df):
+    return df[df['type'] == 'DEBIT']['amount'].sum()
+
+def total_credit_amount(df):
+    return df[df['type'] == 'CREDIT']['amount'].sum()
+
+def max_credit_amount(df):
+    return df[df['type'] == 'CREDIT']['amount'].max()
+
+def max_debit_amount(df):
+    return df[df['type'] == 'DEBIT']['amount'].max()
+
+def avg_transaction_amount(df):
+    return df['amount'].mean()
 
 
 def overall_statistics():
@@ -348,11 +370,42 @@ def no_of_monthly_transactions():
             st.metric(label="Average Debit Transactions", value=f"{int(average_debit)}")
             st.metric(label="Average Total Transactions", value=f"{int(average_transaction)}")
 
+def show_tutorial():
+    st.write("### How to get phonepe Statement pdf file?")
+    st.write('Open Phonepe Application in your smartphone.')
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.write('## Step 1')
+        st.write("Open phonepe app.Navigate to History section")
+        st.image('images/step1.jpeg',width=250)
+    with col2:
+        st.write('## Step 2')
+        st.write("Click on Download Statment.")
+        st.image('images/step2.jpeg',width=250)
+    with col3:
+        st.write('## Step 3')
+        st.write("Select time period. Click on procced.")
+        st.image('images/step3.jpeg',width=250)
+    with col4:
+        st.write('## Step 4')
+        st.write("View pdf file. And verify it is correct.")
+        st.image('images/step5.jpeg',width=250)
+    
 
-overall_statistics()
-amount_of_monthly_transactions()
-no_of_monthly_transactions()
-frequently_transations_amount()
-frequently_transations_person()
+pdf_file=load_data()
+
+if pdf_file is not None:
+    text = pdf_to_text(pdf_file)
+    transactions = parse_text(text)
+    dataframe = convert_to_dataframe(transactions)
+    df=preprocessor(dataframe)
+    overall_statistics()
+    amount_of_monthly_transactions()
+    no_of_monthly_transactions()
+    frequently_transations_amount()
+    frequently_transations_person()
+
+else:
+    show_tutorial()
 
 # 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
