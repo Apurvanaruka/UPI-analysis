@@ -1,6 +1,11 @@
 # UPI-analysis
 UPI Analysis: Your financial ally. Track, monitor, and gain insights from UPI transactions effortlessly. Understand spending, trends, and make informed decisions. Simplify financial management now!
 
+Ensure you have the following installed on your system:
+
+- **Python**: Version 3.10.13 or higher
+- **Streamlit**: Version 1.35.0 or higher
+
 # How It work
 ### Upload statement pdf from phonepe🤞
 Q. how to get statement pdf from phonepe?
