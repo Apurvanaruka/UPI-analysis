@@ -3,7 +3,6 @@ from preprocessor import *
 import plotly.graph_objects as go
 
 
-
 st.set_page_config(layout="wide")
 
 st.title('UPI Transactions Analysis 📈')
@@ -46,6 +45,7 @@ def overall_statistics():
         st.metric(label="Total Amount", value=f"₹{total_amount(df):,.2f}")
         st.metric(label="Total Debit Amount", value=f"₹{total_debit_amount(df):,.2f}")
         st.metric(label="Total Credit Amount", value=f"₹{total_credit_amount(df):,.2f}")
+        st.metric(label="Total Transactions", value=f"{len(df)}")
 
     with col2:
         st.metric(label="Maximum Credit Amount", value=f"₹{max_credit_amount(df):,.2f}")
@@ -97,7 +97,7 @@ def amount_of_monthly_transactions():
     fig = go.Figure()
 
     # Add debit transactions
-    fig.add_trace(go.Bar(
+    fig.add_trace(go.Line(
         x=months_str,
         y=monthly_transaction['debit'],
         name='Debit',
@@ -106,7 +106,7 @@ def amount_of_monthly_transactions():
     ))
 
     # Add total transactions
-    fig.add_trace(go.Bar(
+    fig.add_trace(go.Line(
         x=months_str,
         y=monthly_transaction['total'],
         name='Total',
@@ -115,7 +115,7 @@ def amount_of_monthly_transactions():
     ))
 
     # Add credit transactions
-    fig.add_trace(go.Bar(
+    fig.add_trace(go.Line(
         x=months_str,
         y=monthly_transaction['credit'],
         name='Credit',
@@ -370,6 +370,30 @@ def no_of_monthly_transactions():
             st.metric(label="Average Debit Transactions", value=f"{int(average_debit)}")
             st.metric(label="Average Total Transactions", value=f"{int(average_transaction)}")
 
+def show_category():
+    labels = df['label'].unique()
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write("### Number of transcations per Category")
+        values = df['label'].value_counts()
+        tab1, tab2 = st.tabs(['📊 Graph', '📄 Data'])
+        with tab1:
+                # Use `hole` to create a donut-like pie chart
+                fig = go.Figure(data=[go.Pie(labels=labels,values=values,textinfo='label+percent',hole=.4)])
+                st.plotly_chart(fig)
+        with tab2:
+            st.write(pd.DataFrame({'Total Transactiona':values}))
+    with col2:
+        st.write("### Amount of transcations per Category")
+        values = [ df[df['label'] == label ]['amount'].sum() for label in labels ]
+        tab1, tab2 = st.tabs(['📊 Graph', '📄 Data'])
+        with tab1:
+            # Use `hole` to create a donut-like pie chart
+            fig = go.Figure(data=[go.Pie(labels=labels,values=values,textinfo='label+percent',hole=.4)])
+            st.plotly_chart(fig)
+        with tab2:
+            st.write(pd.DataFrame({'Category':labels,'Total Amount':values}))
+
 def show_tutorial():
     st.write("### How to get phonepe Statement pdf file?")
     st.write('Open Phonepe Application in your smartphone.')
@@ -400,6 +424,7 @@ if pdf_file is not None:
     dataframe = convert_to_dataframe(transactions)
     df=preprocessor(dataframe)
     overall_statistics()
+    show_category()
     amount_of_monthly_transactions()
     no_of_monthly_transactions()
     frequently_transations_amount()

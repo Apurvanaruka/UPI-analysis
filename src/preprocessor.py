@@ -3,6 +3,7 @@ import re
 import PyPDF2
 from datetime import datetime
 import streamlit as st
+from utils import *
 
 
 def pdf_to_text(pdf_file):
@@ -57,6 +58,7 @@ def preprocessor(df):
   df['name'] = df['name'].str.replace(r'^(Paid to|Received from|Transfer to)\s', '', regex=True)
   df['transaction_id'] = df['transaction_id'].str.replace('Transaction ID ', '')
 
+  df['label'] = df['name'].map(classify_name)
   df=df.drop(['date','time'],axis=1)
 
   return df
