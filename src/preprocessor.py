@@ -60,7 +60,6 @@ def preprocessor(df):
 
   df['label'] = df['name'].map(classify_name)
   df=df.drop(['date','time'],axis=1)
-
   return df
 
 # def export_to_excel(df, excel_path):
