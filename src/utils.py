@@ -320,7 +320,9 @@ def classify_name(name):
 
 
 
-def get_base64_of_bin_file(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()    
+
+def load_img(path):
+    # Open the image using file handling
+    with open(path, "rb") as file:
+        img_data = file.read()
+    return img_data

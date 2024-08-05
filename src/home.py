@@ -2,6 +2,7 @@ import streamlit as st
 from preprocessor import *
 import plotly.graph_objects as go
 from datetime import datetime
+from utils import *
 
 st.title('UPI Transactions Analysis 📈')
 
@@ -417,27 +418,30 @@ def show_category(df):
         with tab2:
             st.write(pd.DataFrame({'Category':labels,'Total Amount':values}))
 
+
 @st.cache_data
 def show_tutorial():
     st.write("### How to get phonepe Statement pdf file?")
-    st.write('Open Phonepe Application in your smartphone.')
     col1, col2, col3, col4 = st.columns(4)
+
+    # Display the image in Streamlit
+    # st.image(img_data, caption='My Image', use_column_width=True)
     with col1:
         st.write('## Step 1')
         st.write("Open phonepe app.Navigate to History section")
-        st.image('static/step1.jpeg',width=250)
+        st.image(load_img('static/step1.jpeg'),width=250)
     with col2:
         st.write('## Step 2')
         st.write("Click on Download Statment.")
-        st.image('static/step2.jpeg',width=250)
+        st.image(load_img('static/step2.jpeg'),width=250)
     with col3:
         st.write('## Step 3')
         st.write("Select time period. Click on procced.")
-        st.image('static/step3.jpeg',width=250)
+        st.image(load_img('static/step3.jpeg'),width=250)
     with col4:
         st.write('## Step 4')
         st.write("View pdf file. And verify it is correct.")
-        st.image('static/step5.jpeg',width=250)
+        st.image(load_img('static/step5.jpeg'),width=250)
 
 # pdf_file=load_data()
 

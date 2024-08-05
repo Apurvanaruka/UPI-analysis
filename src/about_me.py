@@ -72,4 +72,3 @@ st.write("""
 - **Winner**: Innovation, Design, and Entrepreneurship (IDE) Bootcamp Phase-2, organized by the Ministry of Education, Government of India.
 - **Finalist**: Smart India Hackathon 2023
 """)
-
