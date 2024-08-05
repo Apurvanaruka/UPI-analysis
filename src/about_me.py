@@ -10,7 +10,7 @@ st.sidebar.write('[upwork](%s)' % 'https://www.upwork.com/freelancers/~01add883b
 
 
 # Download cv
-pdf_file_path = "./static/Apurva Naruka cv.pdf"  # Path to your PDF file
+pdf_file_path = "static/Apurva Naruka cv.pdf"  # Path to your PDF file
 
 with open(pdf_file_path, "rb") as file:
     pdf_data = file.read()
