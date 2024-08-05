@@ -9,8 +9,19 @@ st.sidebar.write('[Linkedin](%s)' % 'https://www.linkedin.com/in/apurva-naruka/'
 st.sidebar.write('[upwork](%s)' % 'https://www.upwork.com/freelancers/~01add883bfa5bf8ef1?mp_source=share')
 
 
-#Download cv
-st.sidebar.download_button('Download CV', data="static/Apurva Naruka cv.pdf",file_name="apurva_naruka_cv.pdf")
+# Download cv
+pdf_file_path = "static/Apurva Naruka cv.pdf"  # Path to your PDF file
+
+with open(pdf_file_path, "rb") as file:
+    pdf_data = file.read()
+
+st.sidebar.download_button(
+    label="Download CV",
+    data=pdf_data,
+    file_name="apurva_naruka_cv.pdf",
+    mime="application/pdf"
+)
+# st.sidebar.download_button('Download CV', data="static/Apurva Naruka cv.pdf",)
 
 # Profile Summary
 st.title("Apurva Naruka's CV")
