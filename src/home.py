@@ -422,27 +422,63 @@ def show_category(df):
 @st.cache_data
 def show_tutorial():
     st.write("### How to get phonepe Statement pdf file?")
-    col1, col2, col3, col4 = st.columns(4)
+    col11, col12, col13, col14 = st.columns(4)
+    col21, col22, col23, col24 = st.columns(4)
+
+    with col11:
+        st.write('## Step 1')
+        st.write("Open phonepe app.Navigate to History section")
+        
+
+    with col12:
+        st.write('## Step 2')
+        st.write("Click on Download Statment.")
+
+    with col13:
+        st.write('## Step 3')
+        st.write("Select time period. Click on procced.")
+
+    with col14:
+        st.write('## Step 4')
+        st.write("View pdf file. And verify it is correct.")
 
     # Display the image in Streamlit
     # st.image(img_data, caption='My Image', use_column_width=True)
-    with col1:
-        st.write('## Step 1')
-        st.write("Open phonepe app.Navigate to History section")
-        st.image(load_img('static/step1.jpeg'),width=250)
-    with col2:
-        st.write('## Step 2')
-        st.write("Click on Download Statment.")
-        st.image(load_img('static/step2.jpeg'),width=250)
-    with col3:
-        st.write('## Step 3')
-        st.write("Select time period. Click on procced.")
-        st.image(load_img('static/step3.jpeg'),width=250)
-    with col4:
-        st.write('## Step 4')
-        st.write("View pdf file. And verify it is correct.")
-        st.image(load_img('static/step5.jpeg'),width=250)
+    with col21:
+          # Load and display sidebar image
+        img_path = "static/step1.jpeg"
+        img_base64 = img_to_base64(img_path)
+        if img_base64:
+            st.markdown(
+                f'<img src="data:image/png;base64,{img_base64}" class="cover-glow">',
+                unsafe_allow_html=True,
+            )
+    with col22:
+        img_path = "static/step2.jpeg"
+        img_base64 = img_to_base64(img_path)
+        if img_base64:
+            st.markdown(
+                f'<img src="data:image/png;base64,{img_base64}" class="cover-glow">',
+                unsafe_allow_html=True,
+            )
 
+    with col23:
+        img_path = "static/step3.jpeg"
+        img_base64 = img_to_base64(img_path)
+        if img_base64:
+            st.markdown(
+                f'<img src="data:image/png;base64,{img_base64}" class="cover-glow">',
+                unsafe_allow_html=True,
+            )
+
+    with col24:
+        img_path = "static/step5.jpeg"
+        img_base64 = img_to_base64(img_path)
+        if img_base64:
+            st.markdown(
+                f'<img src="data:image/png;base64,{img_base64}" class="cover-glow">',
+                unsafe_allow_html=True,
+            )
 # pdf_file=load_data()
 
 

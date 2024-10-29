@@ -320,9 +320,12 @@ def classify_name(name):
 
 
 
+def img_to_base64(image_path):
+    """Convert image to base64."""
+    try:
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    except Exception as e:
+        logging.error(f"Error converting image to base64: {str(e)}")
+        return None
 
-def load_img(path):
-    # Open the image using file handling
-    with open(path, "rb") as file:
-        img_data = file.read()
-    return img_data

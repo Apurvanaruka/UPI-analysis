@@ -3,25 +3,32 @@ import streamlit as st
 
 # Connect me
 st.sidebar.write("### Contact Me")
-st.sidebar.write('[Gmail](%s)'%'https://mail.google.com/mail/u/0/?fs=1&to=apurvanaruka1@gmail.com&tf=cm')
-st.sidebar.write('[Github](%s)' % 'https://github.com/apurvanaruka/')
-st.sidebar.write('[Linkedin](%s)' % 'https://www.linkedin.com/in/apurva-naruka/')
-st.sidebar.write('[upwork](%s)' % 'https://www.upwork.com/freelancers/~01add883bfa5bf8ef1?mp_source=share')
+st.sidebar.write('Write a mail to me on [Gmail](%s)'%'https://mail.google.com/mail/u/0/?fs=1&to=apurvanaruka1@gmail.com&tf=cm')
+st.sidebar.write('See my work on [Github](%s)' % 'https://github.com/apurvanaruka/')
+st.sidebar.write('Connect with me on [Linkedin](%s)' % 'https://www.linkedin.com/in/apurva-naruka/')
+st.sidebar.write('Hire me on [upwork](%s)' % 'https://www.upwork.com/freelancers/~01add883bfa5bf8ef1?mp_source=share')
 
 
-# Download cv
-pdf_file_path = "static/Apurva Naruka cv.pdf"  # Path to your PDF file
+# # Download cv
+# pdf_file_path = "static/Apurva Naruka cv.pdf"  # Path to your PDF file
 
-with open(pdf_file_path, "rb") as file:
-    pdf_data = file.read()
+# try:
 
-st.sidebar.download_button(
-    label="Download CV",
-    data=pdf_data,
-    file_name="apurva_naruka_cv.pdf",
-    mime="application/pdf"
-)
-# st.sidebar.download_button('Download CV', data="static/Apurva Naruka cv.pdf",)
+#     # with open(pdf_file_path, "rb") as file:
+#     #     pdf_data = file.read()
+
+#     # st.sidebar.download_button(
+#     #     label="Download CV",
+#     #     data=pdf_data,
+#     #     file_name="apurva_naruka_cv.pdf",
+#     #     mime="application/pdf"
+#     # )
+#     st.sidebar.button('show resume online')
+    # https://docs.google.com/document/d/1uWvd09kxFMyCLf1Bk14nEkntbJ6-Jb4pMJ-LRXQL3Vk/edit?usp=sharing
+
+    # st.sidebar.download_button('Download CV', data="static/Apurva Naruka cv.pdf",)
+# except:
+#     st.sidebar.error('File Not Found!')
 
 # Profile Summary
 st.title("Apurva Naruka's CV")
